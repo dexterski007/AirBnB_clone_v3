@@ -86,3 +86,37 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+class TestFileStoragev3(unittest.TestCase):
+    """ new tests for v3 count and get """
+    @unittest.skipIf(models.storage_t == 'db', "Skipping file storage")
+    def test_count(self):
+        """test the count function"""
+        models.storage._FileStorage__objects = {}
+        models.storage.new(State(name="first"))
+        models.storage.new(State(name="second"))
+        models.storage.new(State(name="third"))
+        models.storage.new(City(state_id=first.id, name="cityfirst"))
+        models.storage.new(City(state_id=second.id, name="citysecond"))
+        models.storage.new(City(state_id=third.id, name="citythird"))
+        models.storage.save()
+        tot = len(models.storage.all())
+        totstate = len(models.storage.all(State))
+        counttot = models.storage.count()
+        countstate = models.storage.count(State)
+        self.assertEqual(tot, counttot)
+        self.assertEqual(totstate, countstate)
+
+    @unittest.skipIf(models.storage_t == 'db', "Skipping file storage")
+    def test_get(self):
+        """test the get function"""
+        models.storage._FileStorage__objects = {}
+        models.storage.new(State(name="first"))
+        models.storage.new(State(name="second"))
+        models.storage.new(State(name="third"))
+        models.storage.save()
+        firstst = list(models.storage.all().values())[2]
+        firstid = firstst.id
+        getf = models.storage.get(State, firstid)
+        self.assertEqual(tot, counttot)
+        self.assertEqual(totstate, countstate)
