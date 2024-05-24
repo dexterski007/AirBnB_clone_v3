@@ -15,11 +15,13 @@ from models.user import User
 
 @app_views.route('/status')
 def status():
+    """ route for status """
     return jsonify({"status": "OK"})
 
 
 @app_views.route('/stats')
 def stats():
+    """ route to count the number of objects in storage """
     stats = {
         "amenities": storage.count(Amenity),
         "cities": storage.count(City),
@@ -30,3 +32,4 @@ def stats():
     }
 
     return jsonify(stats)
+

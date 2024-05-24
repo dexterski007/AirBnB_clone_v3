@@ -2,7 +2,7 @@
 """ flask app for api route """
 
 
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, jsonify
 from models import storage
 from api.v1.views import app_views
 import os
@@ -15,6 +15,12 @@ app.register_blueprint(app_views)
 def teardown(exception):
     """ close the connection """
     storage.close()
+
+
+@app.errorhandler(404)
+def nop(error):
+    """ route for 404 """
+    return jsonify({"error": "Not found"}), 404
 
 
 if __name__ == "__main__":
