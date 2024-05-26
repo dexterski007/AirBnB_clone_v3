@@ -11,18 +11,14 @@ from models.user import User
 from models.review import Review
 
 
-@app_views.route("places/<place_id>/reviews", strict_slashes=False,
-                 methods=["GET"])
-def reviews(place_id):
-    """show reviews"""
-    reviews_list = []
+@app_views.route("/places/<place_id>/reviews", methods=["GET"],
+                 strict_slashes=False)
+def getreviews(place_id):
+    """ route to retrieve all reviews """
     place = storage.get(Place, place_id)
-    if place is None:
+    if not place:
         abort(404)
-    reviews = place.reviews
-    for review in reviews:
-        reviews_list.append(review.to_dict())
-    return jsonify(reviews_list)
+    return jsonify([review.to_dict() for review in place.reviews])
 
 
 @app_views.route("/reviews/<review_id>", methods=["GET"], strict_slashes=False)
@@ -47,26 +43,26 @@ def review_del(review_id):
     return jsonify(empty), 200
 
 
-@app_views.route("/places/<place_id>/reviews", methods=["POST"],
-                 strict_slashes=False)
-def reviews_p(place_id):
-    """ route to post new review """
+@app_views.route("/places/<place_id>/reviews", strict_slashes=False,
+                 methods=["POST"])
+def create_review(place_id):
+    """create a new post req"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    review_imp = request.get_json(force=True, silent=True)
-    if not review_imp:
+    data = request.get_json(force=True, silent=True)
+    if not data:
         abort(400, "Not a JSON")
-    if "text" not in review_imp:
-        abort(400, "Missing text")
-    if "user_id" not in review_imp:
+    if "user_id" not in data:
         abort(400, "Missing user_id")
-    user = storage.get(User, review_imp["user_id"])
+    user = storage.get(User, data["user_id"])
     if user is None:
         abort(404)
-    review_new = Review(place_id=place.id, **review_imp)
-    review_new.save()
-    return jsonify(review_new.to_dict()), 201
+    if "text" not in data:
+        abort(400, "Missing text")
+    new_review = Review(place_id=place.id, **data)
+    new_review.save()
+    return jsonify(new_review.to_dict()), 201
 
 
 @app_views.route("/reviews/<review_id>", methods=["PUT"], strict_slashes=False)
