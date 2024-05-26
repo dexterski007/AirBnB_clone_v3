@@ -13,6 +13,7 @@ app.register_blueprint(app_views, url_prefix="/api/v1")
 
 CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
+
 @app.teardown_appcontext
 def teardown(exception):
     """ close the connection """
