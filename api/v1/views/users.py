@@ -63,6 +63,8 @@ def users_put(user_id):
     if to_upd is None:
         abort(404)
     user_imp = request.get_json(force=True, silent=True)
+    if not user_imp:
+        abort(400, "Not a JSON")
     ignored = ['id', 'email', 'created_at', 'updated_at']
     for key, value in user_imp:
         if key not in ignored:
