@@ -32,4 +32,3 @@ def stats():
     }
 
     return jsonify(stats)
-
