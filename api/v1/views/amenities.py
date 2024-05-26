@@ -29,7 +29,7 @@ def amenities_get(amenity_id=None):
     return jsonify(amenity.to_dict())
 
 
-@app_views.route("/amenities/<Amenity_id>", methods=["DELETE"],
+@app_views.route("/amenities/<amenity_id>", methods=["DELETE"],
                  strict_slashes=False)
 def amenities_del(amenity_id):
     """ route to delete specific Amenity """
@@ -55,8 +55,9 @@ def amenities_p():
     return jsonify(Amenity_new.to_dict()), 201
 
 
-@app_views.route("/amenities/<Amenity_id>", methods=["PUT"], strict_slashes=False)
-def amenities_put(Amenity_id):
+@app_views.route("/amenities/<amenity_id>", methods=["PUT"],
+                 strict_slashes=False)
+def amenities_put(amenity_id):
     """ edit a specific Amenity """
     to_upd = storage.get(Amenity, amenity_id)
     if to_upd is None:
