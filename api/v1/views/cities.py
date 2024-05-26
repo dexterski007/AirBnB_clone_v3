@@ -45,6 +45,9 @@ def city_del(city_id):
                  strict_slashes=False)
 def cities_p(state_id):
     """ route to post new city """
+    state = storage.get(State, state_id)
+    if state is None:
+        abort(404)
     city_imp = request.get_json(force=True, silent=True)
     if not city_imp:
         abort(400, "Not a JSON")
