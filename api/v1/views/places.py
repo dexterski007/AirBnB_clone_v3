@@ -53,6 +53,11 @@ def places_p(city_id):
         abort(400, "Not a JSON")
     if "name" not in place_imp:
         abort(400, "Missing name")
+    if "user_id" not in place_imp:
+        abort(400, "Missing user_id")
+    user = storage.get(User, place_imp["user_id"])
+    if user is None:
+        abort(404)
     place_imp['city_id'] = city_id
     place_new = Place(**place_imp)
     place_new.save()
