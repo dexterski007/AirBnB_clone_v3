@@ -65,9 +65,8 @@ def users_put(user_id):
     user_imp = request.get_json(force=True, silent=True)
     if not user_imp:
         abort(400, "Not a JSON")
-    ignored = ['id', 'email', 'created_at', 'updated_at']
-    for key, value in user_imp:
-        if key not in ignored:
-            setattr(to_upd, key, value)
+    to_upd.password = user_imp.get("password", to_upd.password)
+    to_upd.first_name = user_imp.get("first_name", to_upd.first_name)
+    to_upd.last_name = user_imp.get("last_name", to_upd.last_name)
     to_upd.save()
     return jsonify(to_upd.to_dict()), 200
