@@ -15,10 +15,10 @@ from models.review import Review
                  strict_slashes=False)
 def getreviews(place_id):
     """ route to retrieve all reviews """
-    places = storage.get(Place, place_id)
-    if not places:
+    place = storage.get(Place, place_id)
+    if not place:
         abort(404)
-    return jsonify([review.to_dict() for review in places.reviews])
+    return jsonify([review.to_dict() for review in place.reviews])
 
 
 @app_views.route("/reviews/<review_id>", methods=["GET"], strict_slashes=False)
@@ -33,7 +33,7 @@ def reviews_get(review_id=None):
 @app_views.route("/reviews/<review_id>", methods=["DELETE"],
                  strict_slashes=False)
 def review_del(review_id):
-    """ route to delete specific place """
+    """ route to delete specific review """
     review_todel = storage.get(Review, review_id)
     if review_todel is None:
         abort(404)
@@ -71,8 +71,8 @@ def reviews_put(place_id):
     to_upd = storage.get(Review, review_id)
     if to_upd is None:
         abort(404)
-    place_imp = request.get_json(force=True, silent=True)
-    if not place_imp:
+    review_imp = request.get_json(force=True, silent=True)
+    if not review_imp:
         abort(400, "Not a JSON")
     to_upd.text = place_imp.get("text", to_upd.text)
     to_upd.save()
