@@ -5,7 +5,6 @@
 from api.v1.views import app_views
 from flask import jsonify, request
 from models import storage
-from models.base_model import BaseModel
 from models.state import State
 
 
@@ -45,11 +44,11 @@ def states_del(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def states_p():
     """ route to post new state """
-    if not request.json:
-        abort(400, description='Not a JSON')
-    state_imp = request.get_json()
+    state_imp = request.get_json(force=True, silent=True)
+    if not state_imp:
+        abort(400, "Not a JSON")
     if "name" not in state_imp:
-        abort(400, description='Missing name')
+        abort(400, "Missing name")
     state_new = State(**state_imp)
     storage.new(state_new)
     storage.save()
@@ -62,12 +61,9 @@ def states_put(state_id):
     to_upd = storage.get(State, state_id)
     if to_upd is None:
         abort(404)
-    if not request.json:
-        abort(400, description="Not a JSON")
-    state_imp = request.get_json()
-    ignored = ['id', 'created_at', 'updated_at']
-    for key, value in state_imp.items():
-        if key not in ignored:
-            setattr(to_upd, key, value)
-    storage.save()
+    state_imp = request.get_json(force=True, silent=True)
+    if not state_imp:
+        abort(400, "Not a JSON")
+    to_upd.name = state_imp.get("name", to_upd.name)
+    to_upd.save()
     return jsonify(to_upd.to_dict()), 200
