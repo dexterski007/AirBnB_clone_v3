@@ -13,7 +13,7 @@ import os
 
 @app_views.route("/places/<place_id>/amenities", methods=["GET"],
                  strict_slashes=False)
-def getreviews(place_id):
+def getamenity(place_id):
     """ route to retrieve all amenities """
     place = storage.get(Place, place_id)
     if not place:
