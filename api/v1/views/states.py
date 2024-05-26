@@ -50,7 +50,7 @@ def states_p():
     if "name" not in state_imp:
         abort(400, "Missing name")
     state_new = State(**state_imp)
-    storage.save()
+    state_new.save()
     return jsonify(state_new.to_dict()), 201
 
 
