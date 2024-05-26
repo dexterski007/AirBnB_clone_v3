@@ -8,7 +8,7 @@ from api.v1.views import app_views
 import os
 
 app = Flask(__name__)
-app.register_blueprint(app_views)
+app.register_blueprint(app_views, url_prefix="/api/v1")
 
 
 @app.teardown_appcontext
@@ -26,7 +26,7 @@ def nop(error):
 @app.errorhandler(400)
 def nop2(error):
     """ route for 400 """
-    error_msg = e.description
+    error_msg = error.description
     return error_msg, 400
 
 
