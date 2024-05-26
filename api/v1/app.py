@@ -23,6 +23,13 @@ def nop(error):
     return jsonify({"error": "Not found"}), 404
 
 
+@app.errorhandler(400)
+def nop2(error):
+    """ route for 400 """
+    error_msg = e.description
+    return error_msg, 400
+
+
 if __name__ == "__main__":
     host = os.getenv('HBNB_API_HOST', '0.0.0.0')
     port = int(os.getenv('HBNB_API_PORT', 5000))
