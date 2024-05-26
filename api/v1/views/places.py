@@ -58,8 +58,7 @@ def places_p(city_id):
     user = storage.get(User, place_imp["user_id"])
     if user is None:
         abort(404)
-    place_imp['city_id'] = city_id
-    place_new = Place(**place_imp)
+    place_new = Place(city_id=city.id, **place_imp)
     place_new.save()
     return jsonify(place_new.to_dict()), 201
 
