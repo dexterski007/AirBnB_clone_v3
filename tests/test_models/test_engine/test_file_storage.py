@@ -121,12 +121,18 @@ class TestFileStoragev3(unittest.TestCase):
     def test_count(self):
         """test the count function"""
         models.storage._FileStorage__objects = {}
-        models.storage.new(State(name="first"))
-        models.storage.new(State(name="second"))
-        models.storage.new(State(name="third"))
-        models.storage.new(City(state_id=first.id, name="cityfirst"))
-        models.storage.new(City(state_id=second.id, name="citysecond"))
-        models.storage.new(City(state_id=third.id, name="citythird"))
+        first = State(name="first")
+        second = State(name="second")
+        third = State(name="third")
+        city_f = City(state_id=first.id, name="cityfirst")
+        city_s = City(state_id=second.id, name="citysecond")
+        city_t = City(state_id=third.id, name="citythird")
+        models.storage.new(first)
+        models.storage.new(second)
+        models.storage.new(third)
+        models.storage.new(city_f)
+        models.storage.new(city_s)
+        models.storage.new(city_t)
         models.storage.save()
         tot = len(models.storage.all())
         totstate = len(models.storage.all(State))
@@ -139,12 +145,20 @@ class TestFileStoragev3(unittest.TestCase):
     def test_get(self):
         """test the get function"""
         models.storage._FileStorage__objects = {}
-        models.storage.new(State(name="first"))
-        models.storage.new(State(name="second"))
-        models.storage.new(State(name="third"))
+        first = State(name="first")
+        second = State(name="second")
+        third = State(name="third")
+        models.storage.new(first)
+        models.storage.new(second)
+        models.storage.new(third)
         models.storage.save()
+        models.storage.close()
         firstst = list(models.storage.all().values())[2]
         firstid = firstst.id
         getf = models.storage.get(State, firstid)
-        self.assertEqual(tot, counttot)
-        self.assertEqual(totstate, countstate)
+        self.assertEqual(getf.id, firstid)
+        models.storage.delete(getf)
+        models.storage.save()
+        models.storage.close()
+        getf = models.storage.get(State, firstid)
+        self.assertEqual(getf, None)
