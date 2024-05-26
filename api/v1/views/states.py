@@ -20,7 +20,7 @@ def states():
 
 
 @app_views.route("/states/<state_id>", methods=["GET"], strict_slashes=False)
-def states_get(state_id):
+def states_get(state_id=None):
     """ route to retrieve specific state """
     state = storage.get(State, state_id)
     if state is None:
