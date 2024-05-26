@@ -22,7 +22,7 @@ def getreviews(place_id):
 
 
 @app_views.route("/reviews/<review_id>", methods=["GET"], strict_slashes=False)
-def reviews_get(review_id=None):
+def reviews_get(review_id):
     """ route to retrieve specific review """
     review = storage.get(Review, review_id)
     if review is None:
@@ -43,30 +43,30 @@ def review_del(review_id):
     return jsonify(empty), 200
 
 
-@app_views.route("/places/<place_id>/reviews", strict_slashes=False,
-                 methods=["POST"])
-def create_review(place_id):
-    """create a new post req"""
+@app_views.route("/places/<place_id>/reviews", methods=["POST"],
+                 strict_slashes=False)
+def reviews_p(place_id):
+    """ route to post new review """
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
-    data = request.get_json(force=True, silent=True)
-    if not data:
+    review_imp = request.get_json(force=True, silent=True)
+    if not review_imp:
         abort(400, "Not a JSON")
-    if "user_id" not in data:
+    if "text" not in review_imp:
+        abort(400, "Missing text")
+    if "user_id" not in review_imp:
         abort(400, "Missing user_id")
-    user = storage.get(User, data["user_id"])
+    user = storage.get(User, review_imp["user_id"])
     if user is None:
         abort(404)
-    if "text" not in data:
-        abort(400, "Missing text")
-    new_review = Review(place_id=place.id, **data)
-    new_review.save()
-    return jsonify(new_review.to_dict()), 201
+    review_new = Review(place_id=place.id, **review_imp)
+    review_new.save()
+    return jsonify(review_new.to_dict()), 201
 
 
 @app_views.route("/reviews/<review_id>", methods=["PUT"], strict_slashes=False)
-def reviews_put(place_id):
+def reviews_put(review_id):
     """ edit a specific review """
     to_upd = storage.get(Review, review_id)
     if to_upd is None:
