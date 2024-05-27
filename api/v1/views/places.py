@@ -77,7 +77,7 @@ def places_search():
     states = search_req.get('states', [])
     cities = search_req.get('cities', [])
     amenities = search_req.get('amenities', [])
-    
+
     places = set()
     if not states and not cities:
         places = set(storage.all(Place).values())
