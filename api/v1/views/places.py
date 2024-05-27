@@ -72,6 +72,10 @@ def places_p(city_id):
 def places_search():
     """ route to search place """
     search_req = request.get_json(force=True, silent=True)
+    if search_req == {}:
+        places = set(storage.all(Place).values())
+        final_places = [place.to_dict() for place in places]
+        return jsonify(final_places)
     if not search_req:
         abort(400, "Not a JSON")
     states = search_req.get('states', [])
