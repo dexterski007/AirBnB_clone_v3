@@ -6,7 +6,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from hashlib import md5
+import hashlib
 
 
 class User(BaseModel, Base):
@@ -14,14 +14,14 @@ class User(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'users'
         email = Column(String(128), nullable=False)
-        __password = Column(String(128), nullable=False)
+        _password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
         places = relationship("Place", backref="user")
         reviews = relationship("Review", backref="user")
     else:
         email = ""
-        __password = ""
+        _password = ""
         first_name = ""
         last_name = ""
 
@@ -32,9 +32,9 @@ class User(BaseModel, Base):
     @property
     def password(self):
         """ getter for password """
-        return self.__password
+        return self._password
 
     @password.setter
     def password(self, value):
         """ setter for password """
-        self.__password = md5(value.encode()).hexdigest()
+        self._password = md5(value.encode()).hexdigest()
