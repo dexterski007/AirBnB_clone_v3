@@ -32,7 +32,7 @@ class User(BaseModel, Base):
     @property
     def password(self):
         return self.__password
-    
+
     @password.setter
     def password(self, value):
-        self.__password = md5(value.encode().hexdigest)
+        self.__password = md5(value.encode()).hexdigest
