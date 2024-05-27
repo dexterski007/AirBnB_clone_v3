@@ -70,7 +70,7 @@ class BaseModel:
             del new_dict["_sa_instance_state"]
         if "__password" in new_dict:
             new_dict['password'] = new_dict['__password']
-            del new_dict['__password']       
+            del new_dict['__password']
         if not incl_pass:
             del new_dict['__password']
         return new_dict
