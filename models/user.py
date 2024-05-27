@@ -14,14 +14,14 @@ class User(BaseModel, Base):
     if models.storage_t == 'db':
         __tablename__ = 'users'
         email = Column(String(128), nullable=False)
-        password = Column(String(128), nullable=False)
+        __password = Column(String(128), nullable=False)
         first_name = Column(String(128), nullable=True)
         last_name = Column(String(128), nullable=True)
         places = relationship("Place", backref="user")
         reviews = relationship("Review", backref="user")
     else:
         email = ""
-        password = ""
+        __password = ""
         first_name = ""
         last_name = ""
 
@@ -35,4 +35,4 @@ class User(BaseModel, Base):
 
     @password.setter
     def password(self, value):
-        self.__password = md5(value.encode()).hexdigest
+        self.__password = md5(value.encode()).hexdigest()
