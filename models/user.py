@@ -38,10 +38,3 @@ class User(BaseModel, Base):
     def password(self, value):
         """ setter for password """
         self.__password = md5(value.encode()).hexdigest()
-
-    def to_dict(self, incl_pass=False):
-        """ return a dictionary using super """
-        new_dict = super().to_dict(incl_pass)
-        if not incl_pass:
-            new_dict.pop('password', None)
-        return new_dict
